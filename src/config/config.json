@@ -8,6 +8,10 @@
     "migrationStorage": "json",
     "seederStorage": "json"
   },
-  "test": {},
-  "production": {}
+  "test": {
+
+  },
+  "production": {
+
+  }
 }

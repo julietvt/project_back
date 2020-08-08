@@ -1,0 +1,32 @@
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Task = sequelize.define('Task', {
+    value: {
+      type: DataTypes.STRING,
+      validate: {
+      notEmpty: true,}
+    }
+    },
+    deadline: {
+      type: DataTypes.DATE,
+      validate: {
+        isDate: true,}
+    }
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      },
+    isDone: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      }
+}, {}, );
+
+  Task.associate = function (models){
+    Task.belongTo(models.User, {
+      foreignKey: 'userId',
+    });
+  };
+  return Task;
+};

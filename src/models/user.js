@@ -1,26 +1,40 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+//const { Model } = require('sequelize');
+const {NAME_PATTERN, SALT} = require('../constants');
+const bcrypt = require('bcrypt');
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+  const User = sequelize.define('User', {
+    firstName: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      validate: {
+        is: NAME_PATTERN,
+      }
+    },
+    lastName: {
+      type: Sequelize.STRING
+      allowNull: false,
+      validate: {
+        is: NAME_PATTERN,
+      }
+    },
+    password: {
+      type: Sequelize.TEXT,
+      field: 'passwordHash',
+      allowNull: false,
+      set(val) {
+        this.setDataValue('password', bcrypt.hashSync(val, SALT));
+      }
+    },
+    profilePicture: {
+      type: Sequelize.STRING,
+      allowNull: true,
     }
+  }, {});
+  User.associate = function (moidels) {
+    User.hasMany(models.Task, {
+      foreignKey: 'userId'
+    });
   };
-  User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    passwordHash: DataTypes.TEXT,
-    profilePicture: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
   return User;
 };
